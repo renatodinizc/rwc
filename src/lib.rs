@@ -1,6 +1,7 @@
 use clap::{command, Arg, ArgAction};
 use std::fs::{self, File};
 use std::io;
+use std::ops::Add;
 
 pub struct Input {
     pub files: Vec<String>,
@@ -17,13 +18,14 @@ pub struct Counter {
     bytes: usize,
 }
 
-impl Counter {
-    pub fn add(&self, counter_b: Counter) -> Counter {
+impl Add for Counter {
+    type Output = Counter;
+    fn add(self, other: Counter) -> Counter {
         Counter {
-            lines: self.lines + counter_b.lines,
-            words: self.words + counter_b.words,
-            characters: self.characters + counter_b.characters,
-            bytes: self.bytes + counter_b.bytes,
+            lines: self.lines + other.lines,
+            words: self.words + other.words,
+            characters: self.characters + other.characters,
+            bytes: self.bytes + other.bytes,
         }
     }
 }

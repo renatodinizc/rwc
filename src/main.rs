@@ -9,7 +9,7 @@ fn main() {
     }
 
     if totals.len() > 1 {
-        let sum = totals.into_iter().reduce(|a, b| a.add(b)).unwrap();
+        let sum = totals.into_iter().reduce(|a, b| a + b).unwrap();
 
         print_totals(sum, &input);
     }
