@@ -97,7 +97,7 @@ fn count_from_file(file: &str, input: &Input) -> Counter {
 fn calculate_counts(input: &Input, content: String, file: Option<&str>) -> Counter {
     let byte_len = content.len();
     let char_len = content.chars().count();
-    let word_len = content.trim().split(' ').collect::<Vec<&str>>().len();
+    let word_len = content.split_whitespace().collect::<Vec<&str>>().len();
     let line_len = content.split('\n').collect::<Vec<&str>>().len() - 1;
 
     let mut result: Vec<usize> = Vec::new();
