@@ -1,4 +1,4 @@
-use rwc::{ get_args, count, print_totals };
+use rwc::{count, get_args, print_totals};
 
 fn main() {
     let input = get_args();
