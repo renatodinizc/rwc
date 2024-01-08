@@ -62,42 +62,25 @@ pub fn display(file: &str, input: &Input) -> (usize, usize, usize, usize)  {
 fn display_from_stdin(input: &Input) -> (usize, usize, usize, usize) {
   let stdin = io::read_to_string(io::stdin()).unwrap();
 
-  let byte_len = stdin.len();
-  let char_len = stdin.chars().count();
-  let word_len = stdin.trim().split(' ').collect::<Vec<&str>>().len();
-  let line_len = stdin.split('\n').collect::<Vec<&str>>().len() - 1;
-
-  print_result(input, line_len, word_len, char_len, byte_len, None);
-
-  (line_len, word_len, char_len, byte_len)
+  calculate_counts(input, stdin, None)
 }
 
 fn display_from_file(file: &str, input: &Input) -> (usize, usize, usize, usize) {
-
-  let mut byte_len = 0;
-  let mut char_len = 0;
-  let mut word_len = 0;
-  let mut line_len = 0;
-
   if let Err(error) = File::open(file) {
     eprintln!("wc: {}: {}", file, error);
-    return (line_len, word_len, char_len, byte_len)
+    return (0, 0, 0, 0)
   }
 
   let content = fs::read_to_string(file).unwrap();
-
-  byte_len += content.len();
-  char_len += content.chars().count();
-  word_len += content.trim().split(' ').collect::<Vec<&str>>().len();
-  line_len += content.split('\n').collect::<Vec<&str>>().len() - 1;
-
-  print_result(input, line_len, word_len, char_len, byte_len, Some(file));
-
-  (line_len, word_len, char_len, byte_len)
-
+  calculate_counts(input, content, Some(file))
 }
 
-fn print_result(input: &Input, line_len: usize, word_len: usize, char_len: usize, byte_len: usize, file: Option<&str>) {
+fn calculate_counts(input: &Input, content: String, file: Option<&str>) -> (usize, usize, usize, usize) {
+  let byte_len = content.len();
+  let char_len = content.chars().count();
+  let word_len = content.trim().split(' ').collect::<Vec<&str>>().len();
+  let line_len = content.split('\n').collect::<Vec<&str>>().len() - 1;
+
   let mut result: Vec<usize> = Vec::new();
 
   if input.line_count { result.push(line_len); }
@@ -115,4 +98,6 @@ fn print_result(input: &Input, line_len: usize, word_len: usize, char_len: usize
 
     println!("\t{}", output.join("\t"));
   }
+
+  (line_len, word_len, char_len, byte_len)
 }
