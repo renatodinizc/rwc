@@ -110,14 +110,14 @@ fn calculate_counts(input: &Input, content: String, file: Option<&str>) -> Count
     if !input.line_count && !input.word_count && !input.byte_count && !input.character_count {
         match file {
             Some(file) => println!("  {} {} {} {}", line_len, word_len, byte_len, file),
-            None => println!("  {} {} {} {}", line_len, word_len, byte_len, file.unwrap())
+            None => println!("{} {} {}", line_len, word_len, byte_len)
         }
     } else {
         let output: Vec<String> = result.iter().map(|num| num.to_string()).collect();
 
         match file {
             Some(file) => println!("  {} {}", output.join(" "), file),
-            None => println!("  {}", output.join(" ")),
+            None => println!("{}", output.join(" ")),
         }
     }
 
@@ -138,10 +138,10 @@ pub fn print_totals(counter: Counter, input: &Input) {
     if input.character_count { result.push(counter.characters) }
 
     if !input.line_count && !input.word_count && !input.byte_count && !input.character_count {
-        println!("  {} {} {} total", counter.lines, counter.words, counter.bytes)
+        println!("{} {} {} total", counter.lines, counter.words, counter.bytes)
     } else {
         let output: Vec<String> = result.iter().map(|num| num.to_string()).collect();
 
-        println!("  {} total", output.join(" "));
+        println!("{} total", output.join(" "));
     }
 }
