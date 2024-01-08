@@ -4,17 +4,17 @@ use std::fs::{self, File};
 
 pub struct Input {
     pub files: Vec<String>,
-    pub byte_count: bool,
-    pub character_count: bool,
-    pub word_count: bool,
-    pub line_count: bool,
+    byte_count: bool,
+    character_count: bool,
+    word_count: bool,
+    line_count: bool,
 }
 
 pub struct Counter {
-    pub lines: usize,
-    pub words: usize,
-    pub characters: usize,
-    pub bytes: usize,
+    lines: usize,
+    words: usize,
+    characters: usize,
+    bytes: usize,
 }
 
 impl Counter {
