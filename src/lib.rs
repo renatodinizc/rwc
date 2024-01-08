@@ -1,8 +1,7 @@
 use clap::{ command, Arg, ArgAction };
-use std::io::{self, BufRead, BufReader};
-use std::fs::File;
+use std::io;
+use std::fs::{self, File};
 
-#[derive(Debug)]
 pub struct Input {
   pub files: Vec<String>,
   pub byte_count: bool,
@@ -52,38 +51,68 @@ pub fn get_args() -> Input {
     }
 }
 
-pub fn display(file: &str, input: &Input) {
+pub fn display(file: &str, input: &Input) -> (usize, usize, usize, usize)  {
   if file == "-" {
-    display_from_stdin(input);
+    display_from_stdin(input)
   } else {
-    display_from_file(file, input);
+    display_from_file(file, input)
   }
 }
 
-fn display_from_stdin(input: &Input) {
-  // let stdin = io::stdin();
-  // for line in stdin.lines() {
-  //     match line {
-  //         Ok(content) => format_line_to_display(input),
-  //         Err(error) => eprintln!("{error}"),
-  //     }
-  // }
+fn display_from_stdin(input: &Input) -> (usize, usize, usize, usize) {
+  let stdin = io::read_to_string(io::stdin()).unwrap();
+
+  let byte_len = stdin.len();
+  let char_len = stdin.chars().count();
+  let word_len = stdin.trim().split(' ').collect::<Vec<&str>>().len();
+  let line_len = stdin.split('\n').collect::<Vec<&str>>().len() - 1;
+
+  print_result(input, line_len, word_len, char_len, byte_len, None);
+
+  (line_len, word_len, char_len, byte_len)
 }
 
-fn display_from_file(file: &str, input: &Input) {
-  if let Err(error) = File::open(file) { return eprintln!("rcat: {}: {}", file, error) }
+fn display_from_file(file: &str, input: &Input) -> (usize, usize, usize, usize) {
 
-  // let content = File::open(file).unwrap();
-  // let buffer = BufReader::new(content);
+  let mut byte_len = 0;
+  let mut char_len = 0;
+  let mut word_len = 0;
+  let mut line_len = 0;
 
-  // for line in buffer.lines() {
-  //     match line {
-  //         Ok(sentence) => format_line_to_display(input),
-  //         Err(error) => eprintln!("{error}"),
-  //     }
-  // }
+  if let Err(error) = File::open(file) {
+    eprintln!("wc: {}: {}", file, error);
+    return (line_len, word_len, char_len, byte_len)
+  }
+
+  let content = fs::read_to_string(file).unwrap();
+
+  byte_len += content.len();
+  char_len += content.chars().count();
+  word_len += content.trim().split(' ').collect::<Vec<&str>>().len();
+  line_len += content.split('\n').collect::<Vec<&str>>().len() - 1;
+
+  print_result(input, line_len, word_len, char_len, byte_len, Some(file));
+
+  (line_len, word_len, char_len, byte_len)
+
 }
 
-fn format_line_to_display(input: &Input) {
+fn print_result(input: &Input, line_len: usize, word_len: usize, char_len: usize, byte_len: usize, file: Option<&str>) {
+  let mut result: Vec<usize> = Vec::new();
 
+  if input.line_count { result.push(line_len); }
+  if input.word_count { result.push(word_len); }
+  if input.byte_count { result.push(byte_len); }
+  if input.character_count { result.push(char_len); }
+
+  if !input.line_count && !input.word_count && !input.byte_count && !input.character_count {
+    match file {
+      Some(file) => println!("\t{}\t{}\t{}\t{}", line_len, word_len, byte_len, file),
+      None => println!("\t{}\t{}\t{}", line_len, word_len, byte_len)
+    }
+  } else {
+    let output: Vec<String> = result.iter().map(|num| num.to_string()).collect();
+
+    println!("\t{}", output.join("\t"));
+  }
 }
