@@ -102,20 +102,23 @@ fn calculate_counts(input: &Input, content: String, file: Option<&str>) -> Count
 
     let mut result: Vec<usize> = Vec::new();
 
-    if input.line_count { result.push(line_len); }
-    if input.word_count { result.push(word_len); }
-    if input.byte_count { result.push(byte_len); }
-    if input.character_count { result.push(char_len); }
+    if input.line_count { result.push(line_len) }
+    if input.word_count { result.push(word_len) }
+    if input.byte_count { result.push(byte_len) }
+    if input.character_count { result.push(char_len) }
 
     if !input.line_count && !input.word_count && !input.byte_count && !input.character_count {
         match file {
-        Some(file) => println!("\t{}\t{}\t{}\t{}", line_len, word_len, byte_len, file),
-        None => println!("\t{}\t{}\t{}", line_len, word_len, byte_len)
+            Some(file) => println!("  {} {} {} {}", line_len, word_len, byte_len, file),
+            None => println!("  {} {} {} {}", line_len, word_len, byte_len, file.unwrap())
         }
     } else {
         let output: Vec<String> = result.iter().map(|num| num.to_string()).collect();
 
-        println!("\t{}", output.join("\t"));
+        match file {
+            Some(file) => println!("  {} {}", output.join(" "), file),
+            None => println!("  {}", output.join(" ")),
+        }
     }
 
     Counter {
@@ -123,5 +126,22 @@ fn calculate_counts(input: &Input, content: String, file: Option<&str>) -> Count
         words: word_len,
         characters: char_len,
         bytes: byte_len,
+    }
+}
+
+pub fn print_totals(counter: Counter, input: &Input) {
+    let mut result: Vec<usize> = Vec::new();
+
+    if input.line_count { result.push(counter.lines) }
+    if input.word_count { result.push(counter.words) }
+    if input.byte_count { result.push(counter.bytes) }
+    if input.character_count { result.push(counter.characters) }
+
+    if !input.line_count && !input.word_count && !input.byte_count && !input.character_count {
+        println!("  {} {} {} total", counter.lines, counter.words, counter.bytes)
+    } else {
+        let output: Vec<String> = result.iter().map(|num| num.to_string()).collect();
+
+        println!("  {} total", output.join(" "));
     }
 }

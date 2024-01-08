@@ -1,4 +1,4 @@
-use rwc::{ get_args, count };
+use rwc::{ get_args, count, print_totals };
 
 fn main() {
     let input = get_args();
@@ -8,5 +8,9 @@ fn main() {
         totals.push(count(file, &input));
     }
 
-    let sum = totals.into_iter().reduce(|a, b| a.add(b));
+    if totals.len() > 1 {
+        let sum = totals.into_iter().reduce(|a, b| a.add(b)).unwrap();
+
+        print_totals(sum, &input);
+    }
 }
