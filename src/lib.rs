@@ -10,6 +10,24 @@ pub struct Input {
   pub line_count: bool,
 }
 
+pub struct Counter {
+  pub lines: usize,
+  pub words: usize,
+  pub characters: usize,
+  pub bytes: usize,
+}
+
+impl Counter {
+  pub fn add(&self, counter_b: Counter) -> Counter {
+    Counter {
+      lines: self.lines + counter_b.lines,
+      words: self.words + counter_b.words,
+      characters: self.characters + counter_b.characters,
+      bytes: self.bytes + counter_b.bytes,
+    }
+  }
+}
+
 pub fn get_args() -> Input {
   let matches = command!()
     .arg(
@@ -51,7 +69,7 @@ pub fn get_args() -> Input {
     }
 }
 
-pub fn display(file: &str, input: &Input) -> (usize, usize, usize, usize)  {
+pub fn display(file: &str, input: &Input) -> Counter  {
   if file == "-" {
     display_from_stdin(input)
   } else {
@@ -59,23 +77,24 @@ pub fn display(file: &str, input: &Input) -> (usize, usize, usize, usize)  {
   }
 }
 
-fn display_from_stdin(input: &Input) -> (usize, usize, usize, usize) {
+fn display_from_stdin(input: &Input) -> Counter {
   let stdin = io::read_to_string(io::stdin()).unwrap();
 
   calculate_counts(input, stdin, None)
 }
 
-fn display_from_file(file: &str, input: &Input) -> (usize, usize, usize, usize) {
+fn display_from_file(file: &str, input: &Input) -> Counter {
   if let Err(error) = File::open(file) {
     eprintln!("wc: {}: {}", file, error);
-    return (0, 0, 0, 0)
+
+    return Counter { lines: 0, words: 0, characters: 0, bytes: 0 }
   }
 
   let content = fs::read_to_string(file).unwrap();
   calculate_counts(input, content, Some(file))
 }
 
-fn calculate_counts(input: &Input, content: String, file: Option<&str>) -> (usize, usize, usize, usize) {
+fn calculate_counts(input: &Input, content: String, file: Option<&str>) -> Counter {
   let byte_len = content.len();
   let char_len = content.chars().count();
   let word_len = content.trim().split(' ').collect::<Vec<&str>>().len();
@@ -99,5 +118,10 @@ fn calculate_counts(input: &Input, content: String, file: Option<&str>) -> (usiz
     println!("\t{}", output.join("\t"));
   }
 
-  (line_len, word_len, char_len, byte_len)
+  Counter {
+    lines: line_len,
+    words: word_len,
+    characters: char_len,
+    bytes: byte_len,
+  }
 }
