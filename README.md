@@ -1,6 +1,6 @@
-# Rust `wc` Clone
+# Rust WC (Word Count) Utility
 
-A simple Rust clone of the Unix utility `wc` that counts lines, words, characters, and bytes in a given input. This project provides a command-line tool that emulates the basic functionality of the `wc` utility.
+A simple command-line utility written in Rust that mimics the functionality of the classic Unix `wc` command. The utility provides a count of lines, words, characters, and bytes in one or more files or standard input.
 
 ## Usage
 To use this utility, simply run the executable and specify the target file(s) as command-line arguments. By default, the utility will count lines, words, characters, and bytes. Additionally, various options are available to customize the output.
@@ -26,7 +26,7 @@ This example will count the lines, words, and characters in the specified files.
 
 The program takes command-line arguments using `clap`, allowing users to specify options and files. It then processes the input files, either from standard input or from specified files. The counting logic is implemented, and the results are printed to the console.
 
-## Building and Running
+## Build and Run
 
 To build the project, ensure you have Rust installed and run the following command:
 
