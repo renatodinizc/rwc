@@ -3,29 +3,20 @@
 A simple Rust clone of the Unix utility `wc` that counts lines, words, characters, and bytes in a given input. This project provides a command-line tool that emulates the basic functionality of the `wc` utility.
 
 ## Usage
+To use this utility, simply run the executable and specify the target file(s) as command-line arguments. By default, the utility will count lines, words, characters, and bytes. Additionally, various options are available to customize the output.
 
+### Command-line Options
+- **-l, --lines:** Print the newline count.
+- **-w, --words:** Print the word count.
+- **-c, --bytes:** Print the byte count.
+- **-m, --chars:** Print the character count.
+
+### Example Usage
 ```bash
-$ cargo run -- [OPTIONS] [FILES...]
+$ ./target/release/rwc -lwm file1.txt file2.txt
 ```
 
-### Options:
-
-- `-c`, `--bytes`: Print the byte count.
-- `-m`, `--chars`: Print the character count.
-- `-w`, `--words`: Print the word count.
-- `-l`, `--lines`: Print the newline count.
-
-### Files:
-
-You can specify one or more files as arguments. Use `-` for standard input.
-
-## Example
-
-```bash
-$ cargo run -- -lwc myfile.txt
-```
-
-This command will print the line, word, and byte counts for the file `myfile.txt`.
+This example will count the lines, words, and characters in the specified files.
 
 ## Dependencies
 
@@ -37,11 +28,16 @@ The program takes command-line arguments using `clap`, allowing users to specify
 
 ## Building and Running
 
-Ensure you have Rust installed on your system. You can build and run the project using:
+To build the project, ensure you have Rust installed and run the following command:
 
 ```bash
-$ cargo build
-$ cargo run -- [OPTIONS] [FILES...]
+$ cargo build --release
+```
+
+To run the utility, execute the generated binary:
+
+```bash
+$ ./target/release/rwc file1.txt file2.txt
 ```
 
 ## License
