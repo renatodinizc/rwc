@@ -124,11 +124,11 @@ fn calculate_counts(input: &Input, content: String, file: Option<&str>) -> Count
     if input.word_count {
         result.push(word_len)
     }
-    if input.byte_count {
-        result.push(byte_len)
-    }
     if input.character_count {
         result.push(char_len)
+    }
+    if input.byte_count {
+        result.push(byte_len)
     }
 
     if !input.line_count && !input.word_count && !input.byte_count && !input.character_count {
@@ -162,11 +162,11 @@ pub fn print_totals(counter: Counter, input: &Input) {
     if input.word_count {
         result.push(counter.words)
     }
-    if input.byte_count {
-        result.push(counter.bytes)
-    }
     if input.character_count {
         result.push(counter.characters)
+    }
+    if input.byte_count {
+        result.push(counter.bytes)
     }
 
     if !input.line_count && !input.word_count && !input.byte_count && !input.character_count {

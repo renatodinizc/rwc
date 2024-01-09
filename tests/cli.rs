@@ -223,7 +223,7 @@ fn count_all_files_with_m_option() {
 }
 
 #[test]
-fn count_all_files_with_mw_option() {
+fn count_all_files_with_mw_options() {
     let mut cmd = Command::cargo_bin("rwc").unwrap();
 
     cmd.arg("tests/inputs/empty.txt");
@@ -242,5 +242,28 @@ fn count_all_files_with_mw_option() {
 57 299 tests/inputs/tao.txt
 1 9 tests/inputs/emojis.txt
 74 399 total\n",
+    );
+}
+
+#[test]
+fn count_all_files_with_all_options() {
+    let mut cmd = Command::cargo_bin("rwc").unwrap();
+
+    cmd.arg("tests/inputs/empty.txt");
+    cmd.arg("tests/inputs/non_readable.txt");
+    cmd.arg("tests/inputs/phrase.txt");
+    cmd.arg("tests/inputs/tao.txt");
+    cmd.arg("tests/inputs/emojis.txt");
+    cmd.arg("-lwmc");
+
+    cmd.assert()
+        .success()
+        .stderr("wc: tests/inputs/non_readable.txt: Permission denied (os error 13)\n");
+    cmd.assert().success().stdout(
+        "1 0 1 1 tests/inputs/empty.txt
+1 16 90 90 tests/inputs/phrase.txt
+6 57 299 299 tests/inputs/tao.txt
+1 1 9 33 tests/inputs/emojis.txt
+9 74 399 423 total\n",
     );
 }
